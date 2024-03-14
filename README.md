@@ -100,5 +100,96 @@ INSTALLED_APPS = [
 
 ```
 
+## The first api of the project
 
+### Creating the first api
 
+1. Create an app that will serve as an API with the following command:
+```
+// terminal
+
+py manage.py startapp api /* the last word 'api' is the name of the API */
+```
+2. Define the new App inside of settings.py:
+```
+// back-end\music_controller\music_controller\settings.py
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'api',                        # here
+]
+```
+3. Create a *view* inside of the 'api' App to test the server:
+
+    Keep in mind that *views* are what render what we see in the *end points*.
+
+    *End poinds* are site locations of a website, like: /index, /login, etc.
+```
+// back-end\music_controller\api\views.py
+
+from django.shortcuts import render
+from django.http import HttpResponse # imported
+
+# Create your views here.
+def main(request):
+    return HttpResponse("Hello")
+```
+
+4. Create the *urls.py* file inside the 'api' App folder.
+
+    This file stores all *url endpoints* local to this App.
+
+```
+// back-end\music_controller\api\urls.py
+
+from django.urls import path
+from .views import main # from the same folder's views file import the function 'main'
+
+urlpatterns = [
+    path('', main),
+]
+```
+5. Define the *url path* of the 'api' inside the Django project folder's *urls.py* file.
+
+    If the first argument (or route property) of the path function is an empty string, then the *end point* will be blank.
+
+    In the code block below, if the website domain is example.com, the defined *end points* will be:
+
+        - example.com/admin
+        - example.com/
+
+```
+// back-end\music_controller\music_controller\urls.py
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('api.urls')),       #this one
+]
+```
+6. Make migrations:
+
+    This is done at the beginning or when we modify the models and database.
+
+```
+// terminal
+
+py manage.py makemigrations
+py manage.py migrate
+```
+7. Run the webserver:
+```
+// terminal
+
+py manage.py runserver
+```
